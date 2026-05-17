@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import { IMAGES } from '../assets/images';
 
 const NAV_LINKS = [
   { label: 'Home', to: '/' },
@@ -10,15 +11,23 @@ const NAV_LINKS = [
   { label: 'Contact', to: '/contact' },
 ];
 
-/* Letter bounce + orange color on hover */
+/* Letter tumble + orange color on hover */
 const letterVariants = {
-  rest: { y: 0, color: 'inherit' },
+  rest: {
+    y: 0,
+    rotateX: 0,
+    rotateZ: 0,
+    color: 'inherit',
+    transition: { duration: 0.35, ease: [0.22, 1, 0.36, 1] },
+  },
   hover: (i) => ({
-    y: [0, -4, 2, 0],
+    y: [0, -6, 2, 0],
+    rotateX: [0, -40, 20, 0],
+    rotateZ: [0, -8, 4, 0],
     color: '#fe8949',
     transition: {
-      duration: 0.5,
-      delay: i * 0.045,
+      duration: 0.55,
+      delay: i * 0.055,
       ease: [0.22, 1, 0.36, 1],
     },
   }),
@@ -26,7 +35,7 @@ const letterVariants = {
 
 function BouncyLabel({ text, isActive }) {
   return (
-    <span className="inline-flex">
+    <span className="inline-flex" style={{ perspective: '400px' }}>
       {text.split('').map((char, i) => (
         <motion.span
           key={i}
@@ -68,26 +77,20 @@ export default function Navbar() {
     >
       <nav className="max-w-clinic mx-auto px-6 md:px-16 h-20 flex items-center justify-between">
 
-        {/* ── Logo ── */}
+        {/* ── Logo + Clinic Name ── */}
         <Link to="/" className="flex items-center gap-3 flex-shrink-0">
-          <div
-            className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
-            style={{ background: '#004674', boxShadow: '0 4px 12px rgba(0,70,116,0.3)' }}
-          >
-            <span
-              className="material-symbols-outlined text-white"
-              style={{ fontSize: 20, fontVariationSettings: "'FILL' 1" }}
-            >
-              visibility
-            </span>
-          </div>
+          <img
+            src={IMAGES.logo}
+            alt="Dr. Rama's Eye Clinic logo"
+            className="h-10 w-auto object-contain flex-shrink-0"
+          />
           <div className="leading-tight">
-            <p className="font-black text-base leading-none" style={{ color: '#1c1b1b' }}>
+            <p className="font-black text-base leading-none" style={{ color: '#004674' }}>
               Dr. Rama's
             </p>
             <p
-              className="text-[10px] font-bold uppercase leading-none mt-0.5"
-              style={{ color: '#717881', letterSpacing: '0.2em' }}
+              className="text-[10px] font-black uppercase leading-none mt-0.5"
+              style={{ color: '#fe8949', letterSpacing: '0.2em' }}
             >
               Eye Clinic
             </p>
@@ -104,8 +107,7 @@ export default function Navbar() {
                   initial="rest"
                   whileHover="hover"
                   animate="rest"
-                  className="px-4 py-2 rounded-lg cursor-pointer select-none text-sm font-semibold"
-                  /* No background box — active state shown only via letter color */
+                  className="px-4 py-2 cursor-pointer select-none text-sm font-semibold"
                   style={{ background: 'transparent' }}
                 >
                   <BouncyLabel text={label} isActive={isActive} />
