@@ -11,13 +11,9 @@ const NAV_LINKS = [
   { label: 'Contact', to: '/contact' },
 ];
 
-/* Letter tumble + orange color on hover */
 const letterVariants = {
   rest: {
-    y: 0,
-    rotateX: 0,
-    rotateZ: 0,
-    color: 'inherit',
+    y: 0, rotateX: 0, rotateZ: 0, color: 'inherit',
     transition: { duration: 0.35, ease: [0.22, 1, 0.36, 1] },
   },
   hover: (i) => ({
@@ -25,11 +21,7 @@ const letterVariants = {
     rotateX: [0, -40, 20, 0],
     rotateZ: [0, -8, 4, 0],
     color: '#fe8949',
-    transition: {
-      duration: 0.55,
-      delay: i * 0.055,
-      ease: [0.22, 1, 0.36, 1],
-    },
+    transition: { duration: 0.55, delay: i * 0.055, ease: [0.22, 1, 0.36, 1] },
   }),
 };
 
@@ -78,19 +70,25 @@ export default function Navbar() {
       <nav className="max-w-clinic mx-auto px-6 md:px-16 h-20 flex items-center justify-between">
 
         {/* ── Logo + Clinic Name ── */}
-        <Link to="/" className="flex items-center gap-3 flex-shrink-0">
-          <img
+        <Link to="/" className="flex items-center gap-4 flex-shrink-0">
+          <motion.img
             src={IMAGES.logo}
             alt="Dr. Rama's Eye Clinic logo"
-            className="h-10 w-auto object-contain flex-shrink-0"
+            className="w-auto object-contain flex-shrink-0"
+            style={{ height: 52 }}          /* ← bigger logo */
+            whileHover={{ scale: 1.06, rotate: -2 }}
+            transition={{ type: 'spring', stiffness: 400, damping: 15 }}
           />
           <div className="leading-tight">
-            <p className="font-black text-base leading-none" style={{ color: '#004674' }}>
+            <p
+              className="font-black leading-none"
+              style={{ color: '#004674', fontSize: 22 }}   /* ← bigger text */
+            >
               Dr. Rama's
             </p>
             <p
-              className="text-[10px] font-black uppercase leading-none mt-0.5"
-              style={{ color: '#fe8949', letterSpacing: '0.2em' }}
+              className="font-black uppercase leading-none mt-1"
+              style={{ color: '#fe8949', letterSpacing: '0.22em', fontSize: 11 }}
             >
               Eye Clinic
             </p>
@@ -107,8 +105,8 @@ export default function Navbar() {
                   initial="rest"
                   whileHover="hover"
                   animate="rest"
-                  className="px-4 py-2 cursor-pointer select-none text-sm font-semibold"
-                  style={{ background: 'transparent' }}
+                  className="px-4 py-2 cursor-pointer select-none font-semibold"
+                  style={{ fontSize: 14 }}
                 >
                   <BouncyLabel text={label} isActive={isActive} />
                 </motion.div>
@@ -121,15 +119,12 @@ export default function Navbar() {
         <div className="hidden md:block">
           <Link to="/contact">
             <motion.button
-              className="font-bold text-sm text-white rounded-full px-6 py-2.5"
+              className="font-bold text-sm text-white rounded-full px-6 py-3"
               style={{
                 background: '#004674',
                 boxShadow: '0 4px 16px rgba(0,70,116,0.28)',
               }}
-              whileHover={{
-                scale: 1.05,
-                boxShadow: '0 6px 24px rgba(0,70,116,0.42)',
-              }}
+              whileHover={{ scale: 1.05, boxShadow: '0 6px 24px rgba(0,70,116,0.42)' }}
               whileTap={{ scale: 0.97 }}
             >
               Book Appointment
@@ -167,11 +162,8 @@ export default function Navbar() {
                   <Link
                     key={to}
                     to={to}
-                    className="block px-4 py-3 rounded-xl text-sm font-semibold"
-                    style={{
-                      color: isActive ? '#fe8949' : '#4d4543',
-                      background: 'transparent',
-                    }}
+                    className="block px-4 py-3 rounded-xl font-semibold"
+                    style={{ color: isActive ? '#fe8949' : '#4d4543', fontSize: 15 }}
                   >
                     {label}
                   </Link>
@@ -180,8 +172,8 @@ export default function Navbar() {
               <div className="pt-2">
                 <Link to="/contact">
                   <button
-                    className="w-full py-3 rounded-full font-bold text-sm text-white"
-                    style={{ background: '#004674' }}
+                    className="w-full py-3 rounded-full font-bold text-white"
+                    style={{ background: '#004674', fontSize: 15 }}
                   >
                     Book Appointment
                   </button>

@@ -228,8 +228,8 @@ export default function Contact() {
                 <h3 style={{ fontSize: 20, fontWeight: 800, marginBottom: 24 }}>Clinic Info</h3>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
                   {[
-                    { icon: 'location_on', text: '123 Visionary Ave, Clinic District\nVisakhapatnam, AP 530001' },
-                    { icon: 'phone',       text: '+91 (80) 2345 6789' },
+                    { icon: 'location_on', text: '1st Floor, above Dr Sandeep Skin Clinic,\nbeside Sri Krishna Orthopedic Hospital,\nGajuwaka, Visakhapatnam, AP 530026' },
+                    { icon: 'phone',       text: '063096 28889' },
                     { icon: 'mail',        text: 'hello@drramaseye.com' },
                   ].map(({ icon, text }) => (
                     <div key={icon} style={{ display: 'flex', alignItems: 'flex-start', gap: 14 }}>
@@ -251,7 +251,7 @@ export default function Contact() {
                 <p style={{ color: 'rgba(255,255,255,0.85)', fontSize: 14, marginBottom: 16, lineHeight: 1.6 }}>
                   In case of severe eye injury or sudden vision loss, visit our 24/7 urgent care unit immediately.
                 </p>
-                <p style={{ fontSize: 22, fontWeight: 900, color: '#fff' }}>911 or +91 (80) 9999 0000</p>
+                <p style={{ fontSize: 22, fontWeight: 900, color: '#fff' }}>063096 28889</p>
               </div>
             </SectionReveal>
 
