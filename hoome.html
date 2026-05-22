@@ -1,74 +1,638 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Eye Clinic Loader</title>
+<html class="scroll-smooth" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            transition: all 0.5s ease;
+        }
+        .glass-card:hover {
+            background: rgba(255, 255, 255, 0.85);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        .hero-text-shadow {
+            text-shadow: 0 2px 8px rgba(255, 255, 255, 0.8);
+        }
+        
+        /* Floating Animations */
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0); }
+            50% { transform: translateY(-20px) rotate(1deg); }
+        }
+        .animate-float {
+            animation: float 8s ease-in-out infinite;
+        }
 
-  <script src="https://cdn.tailwindcss.com"></script>
+        /* Shimmer Effect */
+        .shimmer-btn {
+            position: relative;
+            overflow: hidden;
+        }
+        .shimmer-btn::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -60%;
+            width: 20%;
+            height: 200%;
+            background: rgba(255, 255, 255, 0.4);
+            transform: rotate(30deg);
+            animation: shimmer-swipe 4s infinite;
+        }
+        @keyframes shimmer-swipe {
+            0% { left: -60%; }
+            20% { left: 140%; }
+            100% { left: 140%; }
+        }
 
-  <style>
-    body {
-      margin: 0;
-      overflow: hidden;
-      font-family: Arial, sans-serif;
-    }
+        /* Vision Pulse Footer */
+        @keyframes vision-pulse {
+            0% { transform: translate(-50%, -50%) scale(0.85); opacity: 0.05; }
+            50% { transform: translate(-50%, -50%) scale(1.15); opacity: 0.15; }
+            100% { transform: translate(-50%, -50%) scale(0.85); opacity: 0.05; }
+        }
+        .footer-pulse {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 1000px;
+            height: 1000px;
+            background: radial-gradient(circle, #0c629e 0%, transparent 70%);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 0;
+            pointer-events: none;
+            animation: vision-pulse 8s ease-in-out infinite;
+        }
 
-    @keyframes blink {
-      0%, 45%, 100% {
-        transform: scaleY(0);
-        opacity: 0;
-      }
-      48%, 52% {
-        transform: scaleY(1);
-        opacity: 1;
-      }
-    }
+        /* Reveal Animations */
+        .reveal-on-scroll {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .reveal-on-scroll.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
 
-    @keyframes eyeFloat {
-      0%, 100% {
-        transform: translateY(0px) scale(1);
-      }
-      50% {
-        transform: translateY(-6px) scale(1.03);
-      }
-    }
+        .hero-stagger {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeUp 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+        @keyframes fadeUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
 
-    @keyframes wingFloat {
-      0%, 100% {
-        transform: translateY(0px);
-      }
-      50% {
-        transform: translateY(-8px);
-      }
-    }
+        .parallax-bg {
+            transition: transform 0.2s ease-out;
+            will-change: transform;
+        }
 
-    .blink {
-      animation: blink 3s infinite;
-    }
+        .eye-watermark {
+            position: absolute;
+            opacity: 0.05;
+            pointer-events: none;
+            z-index: 0;
+            filter: grayscale(1);
+        }
 
-    .eyeFloat {
-      animation: eyeFloat 2.5s ease-in-out infinite;
-    }
-
-    .wingFloat {
-      animation: wingFloat 2s ease-in-out infinite;
-    }
-  </style>
+        /* Blink Animation Styles */
+        @keyframes blink-top {
+            0%, 10%, 90%, 100% { transform: translateY(-100%); }
+            45%, 55% { transform: translateY(0%); }
+        }
+        @keyframes blink-bottom {
+            0%, 10%, 90%, 100% { transform: translateY(100%); }
+            45%, 55% { transform: translateY(0%); }
+        }
+        .eyelid-active .eyelid-top {
+            animation: blink-top 0.25s ease-in-out;
+        }
+        .eyelid-active .eyelid-bottom {
+            animation: blink-bottom 0.25s ease-in-out;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "error": "#ba1a1a",
+                        "surface-container": "#f0edec",
+                        "on-secondary-container": "#6a2a00",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "primary-container": "#005e9a",
+                        "on-primary-container": "#f9faff",
+                        "on-primary-fixed": "#001d35",
+                        "footer-navy": "#001d35",
+                        "on-surface": "#1c1b1b",
+                        "on-background": "#1c1b1b",
+                        "tertiary-fixed": "#ffdad6",
+                        "primary-fixed": "#d0e4ff",
+                        "primary": "#004674",
+                        "surface-low": "#f6f3f2",
+                        "outline-variant": "#c0c7d3",
+                        "outline": "#717881",
+                        "on-secondary-fixed": "#341100",
+                        "secondary-fixed-dim": "#ffb692",
+                        "on-tertiary-fixed": "#410003",
+                        "on-tertiary": "#ffffff",
+                        "background": "#fdf8f8",
+                        "on-tertiary-fixed-variant": "#930010",
+                        "on-error": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "inverse-primary": "#9bcaff",
+                        "tertiary": "#8c000f",
+                        "on-secondary-fixed-variant": "#793100",
+                        "surface-tint": "#0c629e",
+                        "surface-dim": "#ddd9d8",
+                        "tertiary-fixed-dim": "#ffb3ac",
+                        "on-surface-variant": "#414750",
+                        "secondary-fixed": "#ffdbcb",
+                        "inverse-surface": "#313030",
+                        "on-tertiary-container": "#ffc5bf",
+                        "surface-bright": "#fdf8f8",
+                        "on-error-container": "#93000a",
+                        "on-primary-fixed-variant": "#00497a",
+                        "on-primary": "#ffffff",
+                        "surface-container-highest": "#e6e1e1",
+                        "surface-container-high": "#ece7e7",
+                        "primary-fixed-dim": "#9bcaff",
+                        "inverse-on-surface": "#f4f0ef",
+                        "surface-variant": "#e6e1e1",
+                        "tertiary-container": "#b4151d",
+                        "secondary-container": "#fe8949",
+                        "secondary": "#9f4200",
+                        "surface-container-low": "#f7f2f2",
+                        "surface": "#fdf8f8"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "max-width": "1280px",
+                        "margin-mobile": "16px",
+                        "gutter": "24px",
+                        "section-padding": "96px",
+                        "unit": "8px",
+                        "margin-desktop": "64px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Manrope"],
+                        "body-md": ["Manrope"],
+                        "body-lg": ["Manrope"],
+                        "headline-lg-mobile": ["Manrope"],
+                        "label-md": ["Manrope"],
+                        "headline-lg": ["Manrope"],
+                        "display-lg": ["Manrope"],
+                        "label-sm-caps": ["Manrope"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "700"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "label-sm-caps": ["10px", {"lineHeight": "12px", "letterSpacing": "0.25em", "fontWeight": "800"}]
+                    }
+                }
+            }
+        }
+    </script>
 </head>
+<body class="bg-surface text-on-surface selection:bg-primary-fixed-dim selection:text-on-primary-fixed overflow-x-hidden">
+<div id="main-content">
+<!-- TopNavBar -->
+<nav class="bg-white/70 backdrop-blur-xl text-primary fixed w-full top-0 border-b border-black/5 z-50 transition-all duration-500">
+<div class="max-w-max-width mx-auto h-24 px-margin-mobile md:px-margin-desktop flex justify-between items-center">
+<div class="flex items-center gap-4 group cursor-pointer">
+<div class="p-2 bg-primary/5 rounded-lg group-hover:scale-110 transition-transform duration-500">
+<img alt="Dr. Rama's Eye Clinic Logo" class="h-10 w-auto" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDwQXpMMnUsxrRKz41OO21wHOktdR_vfrPWF6x6HqedchLVsqqtbHWYf5lnRFHb2eMy6e9uRLyucTPbRycH75aJnau4eGzYam4Ff7qfOsNebk9eSl-Z773MC4vMI_LL7rEIIY9mgMXM4zJ858b4G9DT4CKKwxK3dA3hy5b6TpTqSnyrXad1IU6Zx2VNUS0t9z1_z7uH6Iccme-5V8HDsPKl96NMP2v4QCttUU-u6ufbf1W0DKYdUzRIXqQv-gWcKLrwobNIUgjX3ViB"/>
+</div>
+<div class="flex flex-col leading-none">
+<span class="font-display-lg text-2xl font-extrabold tracking-tight text-on-surface">Dr. Rama's</span>
+<span class="text-[10px] font-black uppercase tracking-[0.4em] text-primary">Eye Clinic</span>
+</div>
+</div>
+<div class="hidden md:flex items-center gap-12">
+<a class="text-primary font-bold relative after:absolute after:bottom-[-4px] after:left-0 after:w-full after:h-0.5 after:bg-primary" href="#">Home</a>
+<a class="text-on-surface-variant hover:text-primary transition-all duration-300 hover:tracking-widest" href="#">Services</a>
+<a class="text-on-surface-variant hover:text-primary transition-all duration-300 hover:tracking-widest" href="#">About</a>
+<a class="text-on-surface-variant hover:text-primary transition-all duration-300 hover:tracking-widest" href="#">Doctors</a>
+<a class="text-on-surface-variant hover:text-primary transition-all duration-300 hover:tracking-widest" href="#">Contact</a>
+</div>
+<button class="bg-primary text-white px-8 py-3.5 rounded-full font-label-md text-label-md shadow-lg shadow-primary/20 hover:shadow-primary/40 hover:scale-105 active:scale-95 transition-all duration-300">
+            Book Appointment
+        </button>
+</div>
+</nav>
+<!-- Hero Section -->
+<header class="relative h-screen min-h-[850px] flex items-center overflow-hidden bg-white" id="hero-section">
+<!-- Eye Background Container -->
+<div class="absolute inset-0 z-0">
+<img alt="Cinematic Eye Detail" class="w-full h-full object-cover opacity-60" src="https://lh3.googleusercontent.com/aida/ADBb0uj2erPvL3faT3nm8k1E8i91EyjvYdYdasmIQ1jpEi-zQrWI33QGqpPDy_HfVEsV9rOgGKFojoucyODBSwCbM0dRjwxow008hf-46eaqqUGM2xyOsuNCk7Kie9fl5yFcruZOFHphz5W8J5cSg6iY_GTW3tRMF-OA-Ko12Tze36PLqyHRoIM6x3p3mV6hHmeblQr0SJVzqh1bYH2Rz3eXtDYXuXuBUi85W0TYJhgYECwy-QJWYhbpXVfbilU_"/>
+<!-- Blink Overlay Elements -->
+<div class="absolute inset-0 overflow-hidden pointer-events-none" id="blink-overlay-container">
+<div class="eyelid-top absolute top-0 left-0 w-full h-1/2 bg-white transform -translate-y-full origin-top"></div>
+<div class="eyelid-bottom absolute bottom-0 left-0 w-full h-1/2 bg-white transform translate-y-full origin-bottom"></div>
+</div>
+<!-- Light Theme Gradients -->
+<div class="absolute inset-0 bg-gradient-to-r from-white/90 via-white/50 to-transparent pointer-events-none"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-white via-transparent to-white/40 pointer-events-none"></div>
+</div>
+<div class="relative z-10 max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop w-full grid grid-cols-1 md:grid-cols-12 gap-gutter items-center">
+<div class="md:col-span-7 space-y-8">
+<div class="hero-stagger [animation-delay:200ms] inline-flex items-center gap-3 px-6 py-3 bg-primary/5 backdrop-blur-md rounded-full border border-primary/10">
+<span class="material-symbols-outlined text-primary" style="font-size: 20px;">verified_user</span>
+<span class="font-label-md text-[10px] text-primary uppercase tracking-[0.25em] font-extrabold">Professional Elite Standard</span>
+</div>
+<h1 class="hero-stagger [animation-delay:400ms] font-display-lg text-display-lg leading-[1.1] text-on-surface hero-text-shadow">
+                Precision Care for<br/><span class="text-primary italic">Your Unique Vision</span>
+</h1>
+<p class="hero-stagger [animation-delay:600ms] font-body-lg text-body-lg text-on-surface-variant max-w-xl hero-text-shadow">
+                Combining decades of clinical excellence with world-class technology to provide comprehensive eye care for the most discerning patients.
+            </p>
+<div class="hero-stagger [animation-delay:800ms] flex flex-wrap gap-6 pt-6">
+<button class="shimmer-btn bg-secondary text-white px-10 py-5 rounded-full font-bold text-lg shadow-xl shadow-secondary/20 hover:scale-105 transition-all duration-300 flex items-center gap-4 active:scale-95">
+                    Book a Consultation <span class="material-symbols-outlined text-xl">calendar_today</span>
+</button>
+<button class="backdrop-blur-md bg-white/40 border-2 border-on-surface/10 text-on-surface px-10 py-5 rounded-full font-bold text-lg hover:bg-white/80 hover:border-primary transition-all duration-300 active:scale-95">
+                    Our Services
+                </button>
+</div>
+</div>
+</div>
+<!-- Trust Metrics Bar Overlaid at Bottom of Hero -->
+<div class="absolute bottom-12 left-0 w-full px-margin-mobile md:px-margin-desktop z-20">
+<div class="max-w-max-width mx-auto glass-card rounded-3xl p-8 md:p-12">
+<div class="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
+<div class="flex flex-col items-center text-center group">
+<span class="font-display-lg text-4xl font-extrabold text-primary mb-1 group-hover:scale-110 transition-transform">4.7<span class="text-xl font-bold text-secondary ml-1">★</span></span>
+<span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-[0.25em]">JustDial Rating</span>
+</div>
+<div class="flex flex-col items-center text-center group">
+<span class="font-display-lg text-4xl font-extrabold text-primary mb-1 group-hover:scale-110 transition-transform">24<span class="text-2xl font-bold text-secondary ml-0.5">+</span></span>
+<span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-[0.25em]">Patient Reviews</span>
+</div>
+<div class="flex flex-col items-center text-center group">
+<span class="font-display-lg text-4xl font-extrabold text-primary mb-1 group-hover:scale-110 transition-transform">15<span class="text-2xl font-bold text-secondary ml-0.5">+</span></span>
+<span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-[0.25em]">Years Experience</span>
+</div>
+<div class="flex flex-col items-center text-center group">
+<span class="font-display-lg text-4xl font-extrabold text-secondary mb-1 group-hover:scale-110 transition-transform">24/7</span>
+<span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-[0.25em]">Emergency Care</span>
+</div>
+</div>
+</div>
+</div>
+</header>
+<!-- Specialized Eye Care -->
+<section class="py-section-padding bg-surface-container-low px-margin-mobile md:px-margin-desktop relative overflow-hidden">
+<div class="eye-watermark top-20 right-0 w-[500px]">
+<svg class="fill-primary" viewbox="0 0 100 100"><path d="M10 50 C20 20, 80 20, 90 50 C80 80, 20 80, 10 50 Z M50 65 A15 15 0 1 0 50 35 A15 15 0 0 0 50 65 Z"></path></svg>
+</div>
+<div class="max-w-max-width mx-auto relative z-10">
+<div class="text-center mb-20 space-y-4 reveal-on-scroll">
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Specialized Eye Care</h2>
+<div class="w-16 h-1 bg-secondary mx-auto rounded-full"></div>
+<p class="font-body-lg text-on-surface-variant max-w-2xl mx-auto">Delivering accurate results and compassionate clinical care through advanced diagnostic technologies.</p>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter">
+<!-- Card 1 -->
+<div class="reveal-on-scroll [transition-delay:100ms] relative group h-[480px] overflow-hidden rounded-[2rem] cursor-pointer shadow-lg transition-all duration-700 border border-black/5">
+<img alt="Eye Exams" class="parallax-bg absolute inset-0 w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBX6pWqVJwTmpgx0coo3aN5bniFw0pCi0wWRUTLyQf4G7zurDexifotDyvgfv2DUcnpD2UvgLvVS3tUm5nrVhzS6rAkxUtlbodVNedNFn0xzBoWlOWclP21tPkoE3syKMI1F3D4MtEMRnCsOaPIxU6W9jVshZ0Rj4X7PU66qXnITfgVpy3Pu02v580lrSb-NPNYFuHQpMExmojTFK6bZYiY2hVG2bVDqLvXQ8cv4IhEc8XtQKRel7PqQX8KnXHHsGNtqDvPn2x8angF"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-8 transition-all duration-500 group-hover:backdrop-blur-[2px]">
+<p class="text-primary-fixed text-[10px] font-black uppercase tracking-[0.4em] mb-2">Diagnostics</p>
+<h3 class="text-white font-headline-md text-2xl mb-2">Eye Exams</h3>
+<p class="text-white/80 text-sm opacity-0 transform translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500">Comprehensive digital diagnostics for precise prescriptions.</p>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="reveal-on-scroll [transition-delay:200ms] relative group h-[480px] overflow-hidden rounded-[2rem] cursor-pointer shadow-lg transition-all duration-700 border border-black/5">
+<img alt="LASIK Surgery" class="parallax-bg absolute inset-0 w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAj2oeHxWLKZOM6z9L5TV9HTgBPj_PfVYZlsrbMdhfjk_lJ3aku9SYpvam0I-aAi9td0OsVB3MDigiikwB1i0OhvK-ffY2aJCgA1ziWCZmVZpKPiqH0hXagulZj9ydaHGYWVxf_LIfnwk6IPc-ZiMrRFq5Bf0oAfCZ22IdNR_dYZSC2bzvVOdRBNVscw4AKs00HlNh5KtWnW8x_DXgHE3-ZIhLoO8ehbfELTJqvvZNTRtWzjTORtIm7iuRyUhOvsu-Ku1W98XyEBuQ_"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-8 transition-all duration-500 group-hover:backdrop-blur-[2px]">
+<p class="text-primary-fixed text-[10px] font-black uppercase tracking-[0.4em] mb-2">Surgical Care</p>
+<h3 class="text-white font-headline-md text-2xl mb-2">LASIK Surgery</h3>
+<p class="text-white/80 text-sm opacity-0 transform translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500">Safe, blade-free laser correction for absolute freedom.</p>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="reveal-on-scroll [transition-delay:300ms] relative group h-[480px] overflow-hidden rounded-[2rem] cursor-pointer shadow-lg transition-all duration-700 border border-black/5">
+<img alt="Pediatric Care" class="parallax-bg absolute inset-0 w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDhXEpwYrniAXSWkEAYKkYJLWV3rLI18j45IXJYYYwIFKdCCmpBhf9mwGrB-mp3-3hfDILp7B97U6tlNdTedTPaCxUYaSR90bwjf2DDy5ysJcDMhLMMJROQzdSpmJw980U_ySha7X3sTVsSwkH7T7RiVbYtmOdF6S6D7LPzafXp6MKpvOVAbS7GFOHs5SUnFOjkk4MQeemcKrT5L4s_yFyYj7B1VRRdNRB8ef8zBcW7TBegRilBaSle-INkmTd0_LenAYDlvglAUGzY"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-8 transition-all duration-500 group-hover:backdrop-blur-[2px]">
+<p class="text-primary-fixed text-[10px] font-black uppercase tracking-[0.4em] mb-2">Family Care</p>
+<h3 class="text-white font-headline-md text-2xl mb-2">Pediatric Care</h3>
+<p class="text-white/80 text-sm opacity-0 transform translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500">Gentle care for developing eyes in a friendly environment.</p>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="reveal-on-scroll [transition-delay:400ms] relative group h-[480px] overflow-hidden rounded-[2rem] cursor-pointer shadow-lg transition-all duration-700 border border-black/5">
+<img alt="Disease Management" class="parallax-bg absolute inset-0 w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAXLCBvwlE9POzuEWobRKd1DKmcxNPamNG5yO0wQeJldY2ol4jtKAPcCuCTPzf45vChE9Hf_ccGUwajq7pZ_6Rh8CHf7UUHuAdXa1MvVkx6ziLykWUtbCYkHo29Fxijh6shKJ1Xh2RWRMyj2zYUkr-x_OEGbtI1sp6e0WSI5RpnviNG--zqYLou2Ik6rTK1JjubNX9nKZ2Hrz3kjGxquQsemnCEJPK6Urb5Coji2-rGE-O3pGrOlYol_03BydKRyumb_SwZool4atBk"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-8 transition-all duration-500 group-hover:backdrop-blur-[2px]">
+<p class="text-primary-fixed text-[10px] font-black uppercase tracking-[0.4em] mb-2">Specialized</p>
+<h3 class="text-white font-headline-md text-2xl mb-2">Disease Mgmt</h3>
+<p class="text-white/80 text-sm opacity-0 transform translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500">Expert clinical protocols for Glaucoma and Cataracts.</p>
+</div>
+</div>
+</div>
+<div class="mt-16 text-center reveal-on-scroll">
+<a class="inline-flex items-center gap-4 text-primary font-bold hover:gap-6 transition-all duration-500 group text-lg" href="#">
+                Explore Complete Services Catalog <span class="material-symbols-outlined group-hover:translate-x-2 transition-transform">chevron_right</span>
+</a>
+</div>
+</div>
+</section>
+<!-- Expertise Section (Meet Your Doctor) -->
+<section class="py-section-padding bg-white px-margin-mobile md:px-margin-desktop reveal-on-scroll relative">
+<div class="max-w-max-width mx-auto grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
+<div class="relative reveal-on-scroll [transition-delay:200ms]">
+<div class="aspect-[4/5] bg-surface-container rounded-[3rem] overflow-hidden border border-black/5 shadow-2xl relative z-10 group">
+<img alt="Professional Consultation" class="parallax-bg w-full h-full object-cover group-hover:scale-105 transition-transform duration-[2s]" src="https://lh3.googleusercontent.com/aida/ADBb0uixKbWrZDpaghzemJaY4gx_7SG5gjh0TIS4fjsB48FTMCZ8EfTZRQNaOFhtZXCHWC3lLbvK8BKwPrMhVhHkL5254tTxfK03Xk7KLfF4LDQoSO8rlTlmNAU3e-kIGMRJN0t_KUnOVcYWUrVFHf6AueKNrEWsckGb75fC2zhDIxShg3IRB-RXol3DcmsEQOqxlh3rV20w6TkcEeTDExTUn-P0I0HhDGCQcUqBoIiXlnVtyNMl7pitCXol0R4g"/>
+</div>
+<div class="absolute -bottom-10 -right-10 bg-white p-10 rounded-[2.5rem] shadow-2xl z-20 hover:scale-105 transition-all duration-700 text-center border border-black/5">
+<p class="text-5xl font-extrabold text-secondary mb-1">15+</p>
+<p class="text-[10px] font-black text-on-surface-variant uppercase tracking-[0.4em]">Years Distinction</p>
+</div>
+</div>
+<div class="space-y-10 reveal-on-scroll [transition-delay:400ms]">
+<div>
+<div class="inline-block px-6 py-2 bg-primary/5 text-primary rounded-full font-label-md text-[10px] mb-8 uppercase tracking-[0.25em] font-black border border-primary/10">The Expert Surgeon</div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface leading-tight">Expertise Driven by<br/><span class="text-secondary italic">Compassion</span></h2>
+</div>
+<p class="font-body-lg text-on-surface-variant leading-relaxed">
+                Dr. Rama is a globally recognized ophthalmologist with over 15 years of experience in restorative eye surgery. Specializing in high-definition vision correction, he believes every patient deserves personalized, elite-level clinical attention.
+            </p>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+<div class="flex items-center gap-4 group cursor-default">
+<div class="w-10 h-10 rounded-full bg-primary/5 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all duration-500">
+<span class="material-symbols-outlined text-2xl">check_circle</span>
+</div>
+<span class="font-bold text-on-surface group-hover:translate-x-1 transition-transform">Personalized Protocols</span>
+</div>
+<div class="flex items-center gap-4 group cursor-default">
+<div class="w-10 h-10 rounded-full bg-primary/5 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all duration-500">
+<span class="material-symbols-outlined text-2xl">check_circle</span>
+</div>
+<span class="font-bold text-on-surface group-hover:translate-x-1 transition-transform">HD Vision Mastery</span>
+</div>
+</div>
+<button class="shimmer-btn bg-primary text-white px-10 py-5 rounded-full font-bold shadow-xl shadow-primary/20 hover:scale-105 active:scale-95 transition-all duration-500 text-lg">
+                The Dr. Rama Standard
+            </button>
+</div>
+</div>
+</section>
+<!-- Why Choose Us -->
+<section class="py-section-padding bg-surface-container-low px-margin-mobile md:px-margin-desktop reveal-on-scroll relative overflow-hidden">
+<div class="eye-watermark bottom-20 left-0 w-[600px] -rotate-12 opacity-[0.03]">
+<svg class="fill-primary" viewbox="0 0 100 100"><path d="M10 50 C20 20, 80 20, 90 50 C80 80, 20 80, 10 50 Z M50 65 A15 15 0 1 0 50 35 A15 15 0 0 0 50 65 Z"></path></svg>
+</div>
+<div class="max-w-max-width mx-auto relative z-10">
+<div class="text-center mb-20 reveal-on-scroll">
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Redefining Vision Excellence</h2>
+<div class="w-16 h-1 bg-secondary mx-auto rounded-full mt-4"></div>
+<p class="font-body-lg text-on-surface-variant max-w-2xl mx-auto mt-6">Combining centuries of optical science with the most advanced diagnostic and surgical tools ever created.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<!-- Card 1 -->
+<div class="reveal-on-scroll [transition-delay:100ms] bg-white p-12 rounded-[2.5rem] flex flex-col items-center text-center group hover:-translate-y-4 transition-all duration-700 shadow-sm hover:shadow-xl border border-black/5">
+<div class="w-20 h-20 rounded-full bg-primary/5 flex items-center justify-center text-primary mb-10 group-hover:bg-primary group-hover:text-white transition-all duration-700">
+<span class="material-symbols-outlined" style="font-size: 40px;">biotech</span>
+</div>
+<h3 class="font-headline-md text-2xl mb-4 text-on-surface">Quantum Diagnostics</h3>
+<p class="text-on-surface-variant text-base leading-relaxed">Utilizing AI-driven screening and high-resolution retinal imaging for unmatched precision.</p>
+</div>
+<!-- Card 2 (Highlight) -->
+<div class="reveal-on-scroll [transition-delay:200ms] bg-primary text-white p-12 rounded-[2.5rem] shadow-2xl shadow-primary/20 flex flex-col items-center text-center relative overflow-hidden group hover:-translate-y-6 transition-all duration-700">
+<div class="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+<div class="w-20 h-20 rounded-full bg-white/10 flex items-center justify-center text-white mb-10 group-hover:scale-110 transition-transform duration-700">
+<span class="material-symbols-outlined" style="font-size: 40px;">medical_mask</span>
+</div>
+<h3 class="font-headline-md text-2xl mb-4 relative z-10">Elite Surgical Wing</h3>
+<p class="text-white/80 text-base leading-relaxed relative z-10">Specialists in blade-free LASIK and ultra-precise cataract procedures with near-instant recovery.</p>
+<div class="mt-8 flex items-center gap-2 font-black text-[10px] cursor-pointer hover:gap-4 transition-all relative z-10 uppercase tracking-widest">
+                    Clinical Specs <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="reveal-on-scroll [transition-delay:300ms] bg-white p-12 rounded-[2.5rem] flex flex-col items-center text-center group hover:-translate-y-4 transition-all duration-700 shadow-sm hover:shadow-xl border border-black/5">
+<div class="w-20 h-20 rounded-full bg-primary/5 flex items-center justify-center text-primary mb-10 group-hover:bg-primary group-hover:text-white transition-all duration-700">
+<span class="material-symbols-outlined" style="font-size: 40px;">volunteer_activism</span>
+</div>
+<h3 class="font-headline-md text-2xl mb-4 text-on-surface">Concierge Therapy</h3>
+<p class="text-on-surface-variant text-base leading-relaxed">Every patient receives a custom-tailored vision journey from pediatric care to advanced optics.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Clinic Gallery -->
+<section class="py-section-padding bg-white px-margin-mobile md:px-margin-desktop reveal-on-scroll">
+<div class="max-w-max-width mx-auto">
+<div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-8 reveal-on-scroll">
+<div class="max-w-2xl">
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Center of Vision Excellence</h2>
+<p class="font-body-lg text-on-surface-variant mt-4">A sanctuary of health meticulously designed for patient comfort and surgical precision. Experience the elite standard.</p>
+</div>
+<button class="group flex items-center gap-4 text-primary font-black py-4 px-8 rounded-full border border-primary/20 hover:border-primary hover:bg-primary/5 hover:scale-105 transition-all uppercase tracking-widest text-[10px]">
+<span>Cinema Experience</span>
+<span class="material-symbols-outlined group-hover:rotate-90 transition-transform" style="font-size: 20px;">play_arrow</span>
+</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-4 md:grid-rows-2 gap-6 h-auto md:h-[700px]">
+<div class="reveal-on-scroll [transition-delay:100ms] md:col-span-2 md:row-span-2 rounded-[2.5rem] overflow-hidden shadow-xl group cursor-crosshair border border-black/5">
+<img class="parallax-bg w-full h-full object-cover group-hover:scale-110 transition-transform duration-[2s]" src="https://lh3.googleusercontent.com/aida/ADBb0ui3PIbacNSg-FZq3YiZewZdHIo7OC8r5VlenS6f-2Oaf9PUKhjp8GU6igUdgaNF1RCL72BB9SeGuwswqMencCdXFvKB_QvqCFE7LPrTGAbxHfNzokiE9sG6HuuE3QDwCmu7fxhWOtJizlVO2ksFVzcrIX9QkqdRdGfX2EvuQ8RXJyVwKK5KU9K8eMordZO62pUW6q_PLJrmdHtH93PIW6kHKzO8RnXqgy0EMUiDgANcFDBOkdzWRUPlfdYv"/>
+</div>
+<div class="reveal-on-scroll [transition-delay:200ms] md:col-span-2 rounded-[2.5rem] overflow-hidden shadow-xl group cursor-crosshair border border-black/5">
+<img class="parallax-bg w-full h-full object-cover group-hover:scale-110 transition-transform duration-[2s]" src="https://lh3.googleusercontent.com/aida/ADBb0ugrfxyYMjBg21bJqFn6aFbk2XUqG1XXoZyRBzAmcdMLS7c97hvZ5YBklHY7H_IdBEoxr4wBVRLnAb4XOBQNJcg2QwghOUbsQfg4xJeTlJMkJvl-bo4tGD5YLbxJvUSR12eeHy64LeRehWGVPLA45GtI_xlJF5j9ex__lINhZ_6SCzBGtYsxP_F3U2vZptzFbLvuivyFYDKp1BBeMBOsV7VnkhWL_rdaJQXu6KiMWbl_9mZhsqcjdQLAW9w"/>
+</div>
+<div class="reveal-on-scroll [transition-delay:300ms] rounded-[2.5rem] overflow-hidden shadow-xl group cursor-crosshair border border-black/5">
+<img class="parallax-bg w-full h-full object-cover group-hover:scale-110 transition-transform duration-[2s]" src="https://lh3.googleusercontent.com/aida/ADBb0uhZ2Vf2Cv22sAydxUpzpiKAxc8Y4BKfYcLWT3_2mmA4fSHCxIiJX2CWJMdqhRh2xnnOBrvhGsHL67icuOBL66Prn0DzzBdee8nwu-l1aQaTP_xDOOou7t4XC1kohdsliPSLoSYv1y4RZM_8djtLNBwQpLFBG1i1upkB_JZFB-FbBNeHRZU-Nx2plf1OX5KESkH-RCz063fTdFrhx9m0mrwzu8VMYBLo3USFvI1Qs3n2F6ieOQhiU8DHxgeE"/>
+</div>
+<div class="reveal-on-scroll [transition-delay:400ms] rounded-[2.5rem] overflow-hidden shadow-xl group cursor-crosshair border border-black/5">
+<img class="parallax-bg w-full h-full object-cover group-hover:scale-110 transition-transform duration-[2s]" src="https://lh3.googleusercontent.com/aida/ADBb0ujEPfLTpRnweBj5T_DvirN6ePY9VMYYKLDFjq2Y4PTuqvkomCTkRwlYaLq4aqcajDXJ5iel7l7FVf2WZv3RvU1w2T9vO5yTLXshRcIoNCAS_wjddVk7HLHSvNgfuWkSeXyHUhWPXzHXNOXNgaFPTTEbBo31s2QKtTRYHqyEUbxlqQ6oVaSJ63MSplGfNRMesI4i5kMWkpmR_KSPAiN2RBKUQnYvBalUwQXjxhAEqsZ2rmjjK2xQAXav_x4B"/>
+</div>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="bg-footer-navy text-white pt-32 pb-16 overflow-hidden relative" id="main-footer">
+<div class="footer-pulse opacity-10"></div>
+<div class="max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop relative z-10">
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-x-gutter gap-y-16 mb-24 reveal-on-scroll">
+<!-- Brand -->
+<div class="space-y-8">
+<div class="flex items-center gap-4 group cursor-pointer">
+<div class="p-2 bg-white rounded-xl group-hover:rotate-6 transition-transform duration-500">
+<img alt="Dr. Rama's Logo" class="h-10 w-auto" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDwQXpMMnUsxrRKz41OO21wHOktdR_vfrPWF6x6HqedchLVsqqtbHWYf5lnRFHb2eMy6e9uRLyucTPbRycH75aJnau4eGzYam4Ff7qfOsNebk9eSl-Z773MC4vMI_LL7rEIIY9mgMXM4zJ858b4G9DT4CKKwxK3dA3hy5b6TpTqSnyrXad1IU6Zx2VNUS0t9z1_z7uH6Iccme-5V8HDsPKl96NMP2v4QCttUU-u6ufbf1W0DKYdUzRIXqQv-gWcKLrwobNIUgjX3ViB"/>
+</div>
+<div class="flex flex-col leading-none">
+<span class="font-bold text-2xl text-white">Dr. Rama's</span>
+<span class="text-[10px] font-black uppercase tracking-[0.4em] text-primary-fixed">Eye Clinic</span>
+</div>
+</div>
+<p class="text-white/50 text-sm leading-relaxed max-w-xs">Providing ethical, advanced, and patient-centric vision care since 1998. Your vision is our expertise.</p>
+<!-- Biometric Eye -->
+<div class="relative w-24 h-24 flex items-center justify-center bg-white/5 rounded-full backdrop-blur-xl border border-white/10 overflow-hidden shadow-2xl group hover:scale-110 transition-transform duration-700" id="biometric-eye-container">
+<svg class="w-16 h-16" viewbox="0 0 100 100">
+<path d="M10 50 C20 20, 80 20, 90 50 C80 80, 20 80, 10 50" fill="none" stroke="#ffffff" stroke-opacity="0.2" stroke-width="2"></path>
+<circle cx="50" cy="50" fill="none" r="24" stroke="#0c629e" stroke-opacity="0.4" stroke-width="1"></circle>
+<circle cx="50" cy="50" fill="none" r="20" stroke="#0c629e" stroke-width="2"></circle>
+<circle cx="50" cy="50" fill="#fe8949" id="biometric-pupil" r="10" style="transition: transform 0.1s ease-out;"></circle>
+<circle cx="46" cy="46" fill="white" fill-opacity="0.3" r="4"></circle>
+</svg>
+<div class="absolute top-0 left-0 w-full h-1 bg-secondary/60 scanner-line"></div>
+</div>
+</div>
+<!-- Quick Links -->
+<div>
+<h4 class="font-black text-white mb-8 uppercase tracking-[0.25em] text-[10px]">Navigation</h4>
+<ul class="space-y-4 text-sm text-white/50">
+<li><a class="hover:text-secondary hover:pl-2 transition-all duration-300 inline-block" href="#">Home</a></li>
+<li><a class="hover:text-secondary hover:pl-2 transition-all duration-300 inline-block" href="#">Services</a></li>
+<li><a class="hover:text-secondary hover:pl-2 transition-all duration-300 inline-block" href="#">About</a></li>
+<li><a class="hover:text-secondary hover:pl-2 transition-all duration-300 inline-block" href="#">Doctors</a></li>
+<li><a class="hover:text-secondary hover:pl-2 transition-all duration-300 inline-block" href="#">Contact</a></li>
+</ul>
+</div>
+<!-- Services -->
+<div>
+<h4 class="font-black text-white mb-8 uppercase tracking-[0.25em] text-[10px]">Medical Scope</h4>
+<ul class="space-y-4 text-sm text-white/50">
+<li><a class="hover:text-secondary hover:pl-2 transition-all duration-300 inline-block" href="#">Elite LASIK Suite</a></li>
+<li><a class="hover:text-secondary hover:pl-2 transition-all duration-300 inline-block" href="#">Micro-Cataract surgery</a></li>
+<li><a class="hover:text-secondary hover:pl-2 transition-all duration-300 inline-block" href="#">Pediatric Ophthalmology</a></li>
+<li><a class="hover:text-secondary hover:pl-2 transition-all duration-300 inline-block" href="#">Glaucoma Specialists</a></li>
+<li><a class="hover:text-secondary hover:pl-2 transition-all duration-300 inline-block" href="#">Retinal Imaging Center</a></li>
+</ul>
+</div>
+<!-- Contact -->
+<div>
+<h4 class="font-black text-white mb-8 uppercase tracking-[0.25em] text-[10px]">Headquarters</h4>
+<ul class="space-y-6 text-sm">
+<li class="flex gap-4 group cursor-default">
+<span class="material-symbols-outlined text-secondary group-hover:scale-110 transition-transform duration-300">location_on</span>
+<span class="text-white/50 group-hover:text-white transition-colors">123 Visionary Ave, Clinic District<br/>Bangalore, KA 560001</span>
+</li>
+<li class="flex gap-4 group cursor-pointer">
+<span class="material-symbols-outlined text-secondary group-hover:scale-110 transition-transform duration-300">call</span>
+<span class="text-white/50 group-hover:text-white transition-colors">+91 (80) 2345 6789</span>
+</li>
+</ul>
+</div>
+</div>
+<div class="pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
+<p class="text-white/30 text-xs">© 2024 Dr. Rama's Eye Clinic. Elite Medical Group. All rights reserved.</p>
+<div class="flex gap-10">
+<a class="text-white/30 hover:text-white text-xs transition-colors hover:underline" href="#">Privacy Policy</a>
+<a class="text-white/30 hover:text-white text-xs transition-colors hover:underline" href="#">Terms of Distinction</a>
+</div>
+</div>
+</div>
+</footer>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const observerOptions = {
+            threshold: 0.15,
+            rootMargin: '0px 0px -50px 0px'
+        };
 
-<body class="bg-white flex items-center justify-center min-h-screen">
-  <div class="relative flex flex-col items-center">
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, observerOptions);
 
-    <div class="absolute w-72 h-72 rounded-full bg-cyan-100 blur-3xl opacity-50 animate-pulse"></div>
+        document.querySelectorAll('.reveal-on-scroll').forEach(el => revealObserver.observe(el));
 
-    <div class="relative w-64 h-64 flex items-center justify-center">
+        // Parallax Effect
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            document.querySelectorAll('.parallax-bg').forEach(img => {
+                const speed = 0.08;
+                const rect = img.parentElement.getBoundingClientRect();
+                if (rect.top < window.innerHeight && rect.bottom > 0) {
+                    const yPos = (rect.top - window.innerHeight / 2) * speed;
+                    img.style.transform = `scale(1.15) translateY(${yPos}px)`;
+                }
+            });
+        });
 
-      <div class="absolute left-2 w-24 h-40 rounded-full bg-gradient-to-b from-orange-400 via-red-500 to-purple-700 -rotate-[25deg] wingFloat"></div>
+        // Hero Eye Blink Animation Logic
+        const blinkContainer = document.getElementById('blink-overlay-container');
+        function triggerBlink() {
+            blinkContainer.classList.add('eyelid-active');
+            setTimeout(() => {
+                blinkContainer.classList.remove('eyelid-active');
+                scheduleNextBlink();
+            }, 300); 
+        }
 
-      <div class="absolute right-2 w-24 h-40 rounded-full bg-gradient-to-b from-orange-400 via-red-500 to-purple-700 rotate-[25deg] wingFloat"></div>
+        function scheduleNextBlink() {
+            const randomDelay = Math.floor(Math.random() * (7000 - 4000 + 1) + 4000);
+            setTimeout(triggerBlink, randomDelay);
+        }
 
-      <div class="absolute w-40 h-20 rounded-t-full border-t-[10px] border-blue-700 blink z-20"></div>
+        scheduleNextBlink(); 
 
-      <div class="relative w-36 h-36 rounded-full bg-gradient-to-br from-blue-300 to-cyan-500 shadow-2xl flex items-center justify-center overflow-hidden eyeFloat">
-</html>
+        // Biometric Eye Interaction
+        const eyeContainer = document.getElementById('biometric-eye-container');
+        const pupil = document.getElementById('biometric-pupil');
+        let targetX = 0, targetY = 0;
+        let currentX = 0, currentY = 0;
+
+        if (eyeContainer && pupil) {
+            window.addEventListener('mousemove', (e) => {
+                const rect = eyeContainer.getBoundingClientRect();
+                const eyeX = rect.left + rect.width / 2;
+                const eyeY = rect.top + rect.height / 2;
+                
+                const angle = Math.atan2(e.clientY - eyeY, e.clientX - eyeX);
+                const distance = Math.min(8, Math.hypot(e.clientX - eyeX, e.clientY - eyeY) / 12);
+                
+                targetX = Math.cos(angle) * distance;
+                targetY = Math.sin(angle) * distance;
+            });
+
+            function animateIris() {
+                currentX += (targetX - currentX) * 0.12;
+                currentY += (targetY - currentY) * 0.12;
+                pupil.style.transform = `translate(${currentX}px, ${currentY}px)`;
+                requestAnimationFrame(animateIris);
+            }
+            animateIris();
+        }
+
+        // Nav Glass Animation
+        const nav = document.querySelector('nav');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                nav.classList.add('shadow-[0_10px_40px_-10px_rgba(0,0,0,0.05)]');
+                nav.style.height = '72px';
+            } else {
+                nav.classList.remove('shadow-[0_10px_40px_-10px_rgba(0,0,0,0.05)]');
+                nav.style.height = '96px';
+            }
+        });
+    });
+</script>
+</div>
+</body></html>
